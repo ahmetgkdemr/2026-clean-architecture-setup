@@ -10,6 +10,11 @@ using CleanArhictecture_2025.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddResponseCompression(opt =>
+{
+    opt.EnableForHttps = true;
+});
+
 builder.AddServiceDefaults();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -44,6 +49,8 @@ app.MapScalarApiReference();
 
 app.MapDefaultEndpoints();
 
+app.UseHttpsRedirection(); //ssl brave
+
 app.UseCors(opt => opt
     .AllowAnyHeader()
     .AllowCredentials()
@@ -52,9 +59,16 @@ app.UseCors(opt => opt
 
 app.RegisterRoutes();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseResponseCompression(); //size down =>fast list
+
 app.UseExceptionHandler();
 
-app.MapControllers().RequireRateLimiting("fixed");
+app.MapControllers().RequireRateLimiting("fixed").RequireAuthorization();
+
+ExtensionsMiddleware.CreateFirstUser(app);
 
 app.Run();
 
@@ -63,3 +77,6 @@ app.Run();
 // open api icin mutlaka cors polity yazilmasi gerekiyor
 // bundan sonra artik yazacagim her controller fixed rate limit icerisine girmis oluyor
 // create updadte delete icin minimal api kullanacagiz daha performansli. GetAll icin OData kullanacagiz.
+// buradaki Addjwtbearer içerisinde option olmamasinin sebebi ben bunu jwtoptionssetup icerisinde yazdim
+// mapcontrollers devamina dazdigimiz requireauthrorization bizim tüm controllarimizzda bearer token kontrol etmesini sagliyor
+// ancak modullerdekini bearerlari control etmez bu yuzden gidip modullerdeki mapgroup devamina bunu yine ekliyoruz

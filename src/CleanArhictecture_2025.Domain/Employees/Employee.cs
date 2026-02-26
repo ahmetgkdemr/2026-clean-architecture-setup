@@ -10,7 +10,7 @@ namespace CleanArhictecture_2025.Domain.Employees
         public DateOnly BirthOfDate { get; set; }
         public decimal Salary { get; set; }
         public PersonelInformation PersonelInformation { get; set; } = default!;
-        public Address? Address { get; set; }
+        public Address Address { get; set; } = default!;
     }
 
 

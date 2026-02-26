@@ -1,5 +1,6 @@
 ﻿using CleanArhictecture_2025.Application.Employees;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -11,10 +12,10 @@ namespace CleanArhictecture_2025.WebAPI.Controllers;
 [Route("odata")] //burada başlangıçta odata olarak başlayacak
 [ApiController]
 [EnableQuery]
+//[Authorize("Bearer")] program.cs içerisinde requireauthorization eklediğimiz bunu yazmamı gerek kalmadı
 public class AppODataController(
     ISender sender) : ODataController
 {
-
     public static IEdmModel GetEdmModel()
     {
         ODataConventionModelBuilder builder = new();
@@ -40,4 +41,4 @@ public class AppODataController(
 
 // properties kısmındaki launchsetting.json dosyasındaki launchurl ile scalar/v1 yazarak bunun başlamasını sağlıyoruz. Swagger yerine bunu kullanıyoruz artık
 
-// httpget isteğinde scaların geriye ne döneceğinin templatetini görmek için IActionResult yerine IQuarable<EmployeeGetAllQueryResponse> içerisinde repsponse döndüğünde artık scalar ekranımda geriye ne döneceğini görebiliyorum
+// httpget isteğinde scaların geriye ne döneceğinin templatetini görmek için IActionResult yerine IQuarable<EmployeeGetAllQueryResponse> içerisinde response döndüğünde artık scalar ekranımda geriye ne döneceğini görebiliyorum
